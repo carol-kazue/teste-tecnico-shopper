@@ -4,6 +4,8 @@ import { Button } from "@mui/material";
 import DrawerMenu from "../components/DrawerMenu";
 import ModalShop from "../containers/ModalShop";
 import Modal from "../components/Modal";
+import ModalAlert from "../containers/ModalAlert";
+import TableList from "../components/TableList";
 
 const Index = () => {
   return (
