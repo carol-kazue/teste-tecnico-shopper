@@ -3,21 +3,12 @@ const database = require("../../db");
 const orderProducts = require("../model/orderProducts");
 const products = require("../model/products");
 const orders = require("../model/orders");
-
 const orderRoutes = new Router();
 
-orderRoutes.post("/:orderId/addProduct/:productId", async (req, res) => {
+orderRoutes.get("/products", async (req, res) => {
   try {
-    const orderId = Number(req.params.orderId);
-    const productID = Number(req.params.productId);
-    const qty = req.body.qty;
-
-    const newOrderProducts = await orderProducts.create({
-      product_id: productID,
-      order_id: orderId,
-      qty: qty,
-    });
-    res.send(newOrderProducts);
+    const showProducts = await products.findAll();
+    res.send(showProducts);
   } catch (error) {
     res.end(error.message);
   }
@@ -27,6 +18,15 @@ orderRoutes.get("/orderProducts", async (req, res) => {
   try {
     const showOrderProducts = await orderProducts.findAll();
     res.send(showOrderProducts);
+  } catch (error) {
+    res.end(error.message);
+  }
+});
+
+orderRoutes.get("/", async (req, res) => {
+  try {
+    const showOrders = await orders.findAll();
+    res.send(showOrders);
   } catch (error) {
     res.end(error.message);
   }
@@ -55,6 +55,36 @@ orderRoutes.get("/:orderId/orderProducts", async (req, res) => {
     res.end(error.message);
   }
 });
+orderRoutes.post("/", async (req, res) => {
+  try {
+    const name = req.body.name;
+    const date = req.body.date;
+    const newOrder = await orders.create({
+      name: name,
+      date: date,
+    });
+    res.send(newOrder);
+  } catch (error) {
+    res.end(error.message);
+  }
+});
+orderRoutes.post("/:orderId/addProduct/:productId", async (req, res) => {
+  try {
+    const orderId = Number(req.params.orderId);
+    const productID = Number(req.params.productId);
+    const qty = req.body.qty;
+
+    const newOrderProducts = await orderProducts.create({
+      product_id: productID,
+      order_id: orderId,
+      qty: qty,
+    });
+    res.send(newOrderProducts);
+  } catch (error) {
+    res.end(error.message);
+  }
+});
+
 orderRoutes.patch("/:orderId/edit/:productId", async (req, res) => {
   try {
     const orderId = Number(req.params.orderId);
@@ -91,5 +121,20 @@ orderRoutes.patch("/:orderId/edit/:productId", async (req, res) => {
   }
 });
 
+orderRoutes.delete("/:orderId/delete/:productId", async (req, res) => {
+  try {
+    const orderId = Number(req.params.orderId);
+    const productId = Number(req.params.productId);
+    const deleteOrderProduct = await orderProducts.destroy({
+      where: {
+        product_id: productId,
+        order_id: orderId,
+      },
+    });
+    res.send(deleteOrderProduct);
+  } catch (error) {
+    res.end(error.message);
+  }
+});
 module.exports = orderRoutes;
 // UPDATE `shopper`.`order_products` SET `qty` = '3' WHERE (`id` = '2');
