@@ -29,19 +29,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-const TableListProducts = () => {
-  const { setProducts, products } = useContext(GlobalStateContext);
-  const getProducts = () => {
-    axios.get(`http://localhost:3300/orders/products`).then((res) => {
-      setProducts(res.data);
-      console.log(res.data);
-      // navigate("/home");
-    });
-  };
-  console.log(products);
-  useEffect(() => {
-    getProducts();
-  }, []);
+
+const TableListProducts = ({ products }) => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 600 }} aria-label="customized table">
@@ -61,7 +50,7 @@ const TableListProducts = () => {
                 {row.name}
               </StyledTableCell>
               <StyledTableCell align="center">{row.price}</StyledTableCell>
-              <StyledTableCell align="center">{row.qty_stock}</StyledTableCell>
+              <StyledTableCell align="center">{row.qty}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
@@ -69,5 +58,4 @@ const TableListProducts = () => {
     </TableContainer>
   );
 };
-
 export default TableListProducts;

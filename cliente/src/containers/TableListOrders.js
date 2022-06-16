@@ -9,7 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
+import Button from "@mui/material/Button";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.primary.main,
@@ -29,40 +29,32 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-
-const TableList = () => {
-  const { setProducts, products } = useContext(GlobalStateContext);
-  const getProducts = () => {
-    axios.get(`http://localhost:3300/orders/products`).then((res) => {
-      setProducts(res.data);
-      console.log(res.data);
-      // navigate("/home");
-    });
-  };
-  console.log(products);
+const TableListOrders = () => {
+  const { orders, getOrders } = useContext(GlobalStateContext);
   useEffect(() => {
-    getProducts();
+    getOrders();
   }, []);
+  console.log(orders);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 600 }} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell align="center">Nome</StyledTableCell>
-            <StyledTableCell align="center">Preço&nbsp;(R$)</StyledTableCell>
-            <StyledTableCell align="center">
-              Quantidade&nbsp;(unid.)
-            </StyledTableCell>
+            <StyledTableCell align="center">Data</StyledTableCell>
+            <StyledTableCell align="center">Status</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody sx={{ margin: "auto" }}>
-          {products?.map((row) => (
+          {orders?.map((row) => (
             <StyledTableRow key={row.id}>
               <StyledTableCell align="center" component="th" scope="row">
                 {row.name}
               </StyledTableCell>
-              <StyledTableCell align="center">{row.price}</StyledTableCell>
-              <StyledTableCell align="center">{row.qty_stock}</StyledTableCell>
+              <StyledTableCell align="center">{row.date}</StyledTableCell>
+              <StyledTableCell align="center">
+                <Button>Alterar</Button>
+              </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
@@ -70,4 +62,5 @@ const TableList = () => {
     </TableContainer>
   );
 };
-export default TableList;
+
+export default TableListOrders;

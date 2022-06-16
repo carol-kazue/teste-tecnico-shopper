@@ -6,7 +6,6 @@ import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { Button } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -16,8 +15,8 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import TableListProducts from "../containers/TableListProducts";
-import ModalShop from "../containers/ModalShop";
+import { Link } from "react-router-dom";
+
 const drawerWidth = 240;
 
 const DrawerMenu = (Props) => {
@@ -33,23 +32,26 @@ const DrawerMenu = (Props) => {
       <Toolbar />
       <Divider />
       <List>
-        {["Fazer Pedido", "Alterar Pedido"].map((text, index) => (
-          <ListItem key={text} disablePadding>
+        <ListItem disablePadding>
+          <Link to={"/"}>
             <ListItemButton>
               <ListItemIcon>
-                {index % 2 === 0 ? (
-                  <AddShoppingCartIcon
-                    color="primary"
-                    onClick={<ModalShop />}
-                  />
-                ) : (
-                  <SettingsOutlinedIcon color="primary" />
-                )}
+                <AddShoppingCartIcon color="primary" />
               </ListItemIcon>
-              <ListItemText secondary={text} />
+              <ListItemText secondary={"Criar pedido"} />
             </ListItemButton>
-          </ListItem>
-        ))}
+          </Link>
+        </ListItem>
+        <ListItem disablePadding>
+          <Link to={"/alterar-pedido"}>
+            <ListItemButton>
+              <ListItemIcon>
+                <SettingsOutlinedIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText secondary={"Alterar Pedido"} />
+            </ListItemButton>
+          </Link>
+        </ListItem>
       </List>
       <Divider />
     </div>
@@ -130,7 +132,6 @@ const DrawerMenu = (Props) => {
         }}
       >
         <Toolbar />
-        <TableListProducts />
       </Box>
     </Box>
   );

@@ -3,6 +3,12 @@ import Box from "@mui/material/Box";
 import MUIModal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import Grid from "@mui/material/Grid";
+import Autocomplete from "@mui/material/Autocomplete";
+import { GlobalStateContext } from "../globalContext/GlobalStateContext";
+import { useContext, useEffect } from "react";
 
 const style = {
   position: "absolute",
@@ -16,29 +22,22 @@ const style = {
   p: 4,
 };
 
-const Modal = ({ title, children }) => {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
+const Modal = ({ title, children, open, handleClose, handleOpen }) => {
   return (
-    <div>
-      <Button onClick={handleOpen}>Criar Pedido</Button>
-      <MUIModal
-        keepMounted
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-            {title}
-          </Typography>
-          {children}
-        </Box>
-      </MUIModal>
-    </div>
+    <MUIModal
+      keepMounted
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="keep-mounted-modal-title"
+      aria-describedby="keep-mounted-modal-description"
+    >
+      <Box sx={style}>
+        <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
+          {title}
+        </Typography>
+        {children}
+      </Box>
+    </MUIModal>
   );
 };
 export default Modal;

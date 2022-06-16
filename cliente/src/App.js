@@ -4,7 +4,8 @@ import { ThemeProvider } from "styled-components";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material";
 import theme from "../src/globalStyle/theme";
 import GlobalStyle from "./globalStyle/GlobalStyle";
-import GlobalState from "./globalContext/GlobalContext";
+import GlobalState from "./globalContext/GlobalState";
+import DrawerMenu from "./components/DrawerMenu";
 
 const App = () => {
   return (

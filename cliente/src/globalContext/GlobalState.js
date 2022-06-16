@@ -29,30 +29,49 @@ const GlobalState = (props) => {
         console.log(res.data);
       });
   };
+  const imprimeOrder = (od) => {
+    console.log(od);
+  };
 
-  const postOrder = (orderId, productId) => {
+  const postOrder = (order) => {
+    axios.post(`http://localhost:3300/orders`, order).then((res) => {
+      setOrderProducts([...orderProducts, res.data]);
+      console.log(res.data);
+    });
+  };
+  const patchOrder = (qty, orderId, productId) => {
+    const body = {
+      qty: qty,
+    };
     axios
-      .post(`http://localhost:3300/orders/${orderId}/addProduct/${productId}`)
+      .patch(`http://localhost:3300/orders/${orderId}/edit/${productId}`, body)
       .then((res) => {
-        setOrderProducts([...orderProducts, res.data]);
-        console.log(res.data);
+        const newOrderProducts = orderProducts.map((product) => {
+          if (productId === product.id) {
+            return res.data;
+          }
+          return product;
+        });
+        setOrderProducts(newOrderProducts);
       });
   };
-
-  const data = {
-    products,
-    setProducts,
-    getProducts,
-    orders,
-    setOrders,
-    getOrders,
-    orderProducts,
-    setOrderProducts,
-    getOrderProducts,
-    postOrder,
-  };
   return (
-    <GlobalStateContext.Provider value={data}>
+    <GlobalStateContext.Provider
+      value={{
+        products,
+        setProducts,
+        getProducts,
+        orders,
+        imprimeOrder,
+        setOrders,
+        getOrders,
+        orderProducts,
+        setOrderProducts,
+        getOrderProducts,
+        postOrder,
+        patchOrder,
+      }}
+    >
       {props.children}
     </GlobalStateContext.Provider>
   );
