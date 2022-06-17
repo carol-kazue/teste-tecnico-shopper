@@ -6,6 +6,13 @@ const GlobalState = (props) => {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [orderProducts, setOrderProducts] = useState([]);
+  const [order, setOrder] = useState({
+    id: null,
+    name: "",
+    date: "",
+    products: [],
+  });
+
   const getProducts = () => {
     axios.get(`http://localhost:3300/orders/products`).then((res) => {
       setProducts(res.data);
@@ -29,8 +36,10 @@ const GlobalState = (props) => {
         console.log(res.data);
       });
   };
-  const imprimeOrder = (od) => {
-    console.log(od);
+  const getOrderById = (id) => {
+    axios.get(`http://localhost:3300/orders/${id}`).then((res) => {
+      setOrder(res.data);
+    });
   };
 
   const postOrder = (order) => {
@@ -55,6 +64,13 @@ const GlobalState = (props) => {
         setOrderProducts(newOrderProducts);
       });
   };
+  const updateOrder = (orderId, order) => {
+    // console.log(order, orderId);
+    axios.put(`http://localhost:3300/orders/${orderId}`, order).then((res) => {
+      console.log(res.data);
+      // setOrder(res.data);
+    });
+  };
   return (
     <GlobalStateContext.Provider
       value={{
@@ -62,7 +78,6 @@ const GlobalState = (props) => {
         setProducts,
         getProducts,
         orders,
-        imprimeOrder,
         setOrders,
         getOrders,
         orderProducts,
@@ -70,6 +85,10 @@ const GlobalState = (props) => {
         getOrderProducts,
         postOrder,
         patchOrder,
+        order,
+        getOrderById,
+        setOrder,
+        updateOrder,
       }}
     >
       {props.children}

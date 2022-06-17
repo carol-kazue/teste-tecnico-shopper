@@ -3,21 +3,20 @@ const database = require("../../db");
 const orderProducts = require("../model/orderProducts");
 const products = require("../model/products");
 const orders = require("../model/orders");
+const { getAllProducts } = require("../services/products");
+const {
+  getAllOrders,
+  createOrder,
+  getOrderById,
+  updateOrder,
+} = require("../services/orders");
+const { getProductsByOrderId } = require("../services/orderProducts");
 const orderRoutes = new Router();
 
 orderRoutes.get("/products", async (req, res) => {
   try {
-    const showProducts = await products.findAll();
+    const showProducts = await getAllProducts();
     res.send(showProducts);
-  } catch (error) {
-    res.end(error.message);
-  }
-});
-
-orderRoutes.get("/orderProducts", async (req, res) => {
-  try {
-    const showOrderProducts = await orderProducts.findAll();
-    res.send(showOrderProducts);
   } catch (error) {
     res.end(error.message);
   }
@@ -25,7 +24,7 @@ orderRoutes.get("/orderProducts", async (req, res) => {
 
 orderRoutes.get("/", async (req, res) => {
   try {
-    const showOrders = await orders.findAll();
+    const showOrders = await getAllOrders();
     res.send(showOrders);
   } catch (error) {
     res.end(error.message);
@@ -35,39 +34,56 @@ orderRoutes.get("/", async (req, res) => {
 orderRoutes.get("/:orderId/orderProducts", async (req, res) => {
   try {
     const orderId = Number(req.params.orderId);
-    const orderProcuts = await database.query(
-      `
-    SELECT 
-        products.id as product_id, 
-        products.name as product_name, 
-        order_products.qty as qty 
-    FROM orders
-    JOIN order_products  
-    ON order_products.order_id =  orders.id AND orders.id = ${orderId}
-    JOIN products
-    ON order_products.product_id = products.id;
-    `,
-      { type: database.QueryTypes.SELECT }
-    );
+    const orderProcuts = await getProductsByOrderId(orderId);
 
     res.send(orderProcuts);
   } catch (error) {
     res.end(error.message);
   }
 });
+
+orderRoutes.get("/:orderId", async (req, res) => {
+  try {
+    const orderId = Number(req.params.orderId);
+    const order = await getOrderById(orderId);
+    res.send(order);
+  } catch (error) {
+    res.end(error.message);
+  }
+});
+
 orderRoutes.post("/", async (req, res) => {
   try {
     const name = req.body.name;
+    // string com nome
     const date = req.body.date;
-    const newOrder = await orders.create({
-      name: name,
-      date: date,
-    });
+    // string como data (mm-dd-aaaa);
+    const products = req.body.products;
+    // [{ id: number, qty: number }]
+    const newOrder = await createOrder(name, date, products);
     res.send(newOrder);
   } catch (error) {
     res.end(error.message);
   }
 });
+
+orderRoutes.put("/:orderId", async (req, res) => {
+  try {
+    const orderId = Number(req.params.orderId);
+    const name = req.body.name;
+    // string com nome
+    const date = req.body.date;
+    // string como data (mm-dd-aaaa);
+    const products = req.body.products;
+    // [{ id: number, qty: number }]
+    const updatedOrder = await updateOrder(orderId, name, date, products);
+    res.send(updatedOrder);
+  } catch (error) {
+    console.error(error);
+    res.end(error.message);
+  }
+});
+
 orderRoutes.post("/:orderId/addProduct/:productId", async (req, res) => {
   try {
     const orderId = Number(req.params.orderId);

@@ -5,22 +5,25 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Modal from "../components/Modal";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
-import { GlobalStateContext } from "../globalContext/GlobalStateContext";
+import {
+  GlobalStateContext,
+  ModalShopStateContext,
+} from "../globalContext/GlobalStateContext";
 import { useContext, useEffect } from "react";
 import axios from "axios";
 
 const ModalShop = ({ onProductChange }) => {
-  const { setProducts, products, getProducts } = useContext(GlobalStateContext);
-  const [qty, setQty] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
-  const [product, setProduct] = React.useState("");
-
-  const handleOpen = () => setOpen(true);
-
-  const handleClose = () => setOpen(false);
-
-  const handleQtyChange = (ev) => setQty(ev.target.value);
-
+  const {
+    qty,
+    setQty,
+    open,
+    product,
+    setProduct,
+    handleOpen,
+    handleClose,
+    handleQtyChange,
+    defaultProps,
+  } = useContext(ModalShopStateContext);
   const handleAddProduct = () => {
     if (product.qty_stock < qty) {
       // implementar alerta
@@ -30,19 +33,10 @@ const ModalShop = ({ onProductChange }) => {
       onProductChange(newProduct);
     }
 
-    setProduct("");
+    setProduct(null);
     setQty(0);
     handleClose();
   };
-  useEffect(() => {
-    getProducts();
-  }, []);
-
-  const defaultProps = {
-    options: products,
-    getOptionLabel: (option) => option.name,
-  };
-
   return (
     <>
       <Button onClick={handleOpen}>Adicionar produto </Button>
@@ -69,6 +63,7 @@ const ModalShop = ({ onProductChange }) => {
                 {...defaultProps}
                 id="disable-close-on-select"
                 disableCloseOnSelect
+                blurOnSelect
                 onChange={(ev, newValue) => {
                   setProduct(newValue);
                 }}
@@ -102,9 +97,9 @@ const ModalShop = ({ onProductChange }) => {
               alignItems="center"
               margin={2}
             >
-              <Button color="primary">
+              {/* <Button color="primary">
                 <AddCircleOutlineIcon />
-              </Button>
+              </Button> */}
               <TextField
                 id="quantidade-produto"
                 label="Quantidade"
@@ -112,9 +107,9 @@ const ModalShop = ({ onProductChange }) => {
                 variant="standard"
                 onChange={handleQtyChange}
               />
-              <Button color="primary">
+              {/* <Button color="primary">
                 <RemoveCircleOutlineIcon />
-              </Button>
+              </Button> */}
             </Grid>
             <Grid
               container
@@ -126,7 +121,9 @@ const ModalShop = ({ onProductChange }) => {
               <Button variant="contained" onClick={handleAddProduct}>
                 Adicionar Produto
               </Button>
-              <Button variant="contained">Cancelar</Button>
+              <Button onClick={handleClose} variant="contained">
+                Cancelar
+              </Button>
             </Grid>
           </Grid>
         </Box>

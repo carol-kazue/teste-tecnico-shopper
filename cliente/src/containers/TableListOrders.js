@@ -10,6 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.primary.main,
@@ -53,7 +54,9 @@ const TableListOrders = () => {
               </StyledTableCell>
               <StyledTableCell align="center">{row.date}</StyledTableCell>
               <StyledTableCell align="center">
-                <Button>Alterar</Button>
+                <Link to={`/alterar-pedido/${row.id}`}>
+                  <Button>Alterar</Button>
+                </Link>
               </StyledTableCell>
             </StyledTableRow>
           ))}

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import axios from "axios";
-import { GlobalStateContext } from "../globalContext/GlobalStateContext";
+import { ModalShopStateContext } from "../globalContext/GlobalStateContext";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,6 +8,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { Button, IconButton } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -30,7 +32,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const TableListProducts = ({ products }) => {
+const TableListProducts = ({ products, handleDeleteProduct }) => {
+  const { setOpen, setProduct, setQty } = useContext(ModalShopStateContext);
+  const handleEditProduct = (product) => {
+    setProduct(product);
+    setOpen(true);
+    setQty(product.qty);
+  };
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 600 }} aria-label="customized table">
@@ -41,16 +49,28 @@ const TableListProducts = ({ products }) => {
             <StyledTableCell align="center">
               Quantidade&nbsp;(unid.)
             </StyledTableCell>
+            <StyledTableCell>Alterar</StyledTableCell>
+            <StyledTableCell>Apagar</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody sx={{ margin: "auto" }}>
-          {products?.map((row) => (
-            <StyledTableRow key={row.id}>
+          {products?.map((product) => (
+            <StyledTableRow key={product.id}>
               <StyledTableCell align="center" component="th" scope="row">
-                {row.name}
+                {product.name}
               </StyledTableCell>
-              <StyledTableCell align="center">{row.price}</StyledTableCell>
-              <StyledTableCell align="center">{row.qty}</StyledTableCell>
+              <StyledTableCell align="center">{product.price}</StyledTableCell>
+              <StyledTableCell align="center">{product.qty}</StyledTableCell>
+              <StyledTableCell align="center">
+                <IconButton onClick={() => handleEditProduct(product)}>
+                  <EditIcon />
+                </IconButton>
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                <IconButton onClick={() => handleDeleteProduct(product.id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
