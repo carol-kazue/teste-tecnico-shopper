@@ -5,7 +5,7 @@ const app = express();
 const db = require("../db");
 
 var corsOptions = {
-  origin: "http://localhost:3003",
+  origin: "http://localhost:3000",
 };
 
 db.sync();
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/orders", orderRoutes);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3300;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
